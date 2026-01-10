@@ -29,15 +29,15 @@ export default function TableOfContents() {
   if (toc.length === 0) return null;
 
   return (
-    <nav className="hidden xl:block fixed top-24 right-8 w-48 max-h-[calc(100vh-8rem)] overflow-y-auto">
-      <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-        <h2 className="text-sm font-bold mb-3 text-gray-700">목차</h2>
-        <ul className="space-y-1.5">
+    <nav className="hidden xl:block fixed top-24 right-8 w-64 max-h-[calc(100vh-8rem)] overflow-y-auto">
+      <div className="p-5 bg-gray-50 rounded-lg border border-gray-200">
+        <h2 className="text-base font-bold mb-4 text-gray-800">목차</h2>
+        <ul className="space-y-2.5">
           {toc.map((item) => (
             <li key={item.id}>
               <a
                 href={`#${item.id}`}
-                className="text-xs text-gray-600 hover:text-blue-600 block truncate"
+                className="text-sm text-gray-600 hover:text-blue-600 block"
               >
                 {item.text}
               </a>
