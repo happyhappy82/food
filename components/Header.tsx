@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Header() {
   return (
     <header className="mb-14 flex flex-row place-content-between">
@@ -6,7 +8,13 @@ export default function Header() {
           href="/"
           className="inline-block"
         >
-          <h1 className="text-3xl font-black text-blue-600">맛집리뷰Lab</h1>
+          <Image
+            src="/logo.png"
+            alt="테이스트 가이드"
+            width={180}
+            height={40}
+            priority
+          />
         </a>
       </div>
     </header>

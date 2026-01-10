@@ -8,25 +8,25 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "맛집리뷰Lab",
-  description: "전국 맛집 리뷰 및 음식점 정보를 제공하는 사이트 및 투자 가이드를 제공하는 사이트입니다.",
+  title: "테이스트 가이드",
+  description: "한국의 지역별 맛집정보, 가격정보 등을 전달해드리는 곳입니다. 여행갈때, 나들이갈때 맛집정보를 테이스트 가이드에서 확인하세요.",
   metadataBase: new URL("https://foodreviewlab.xyz"),
-  keywords: ["맛집 리뷰", "아파트 리뷰", "오피스텔 추천", "부동산 투자", "매물 정보"],
-  authors: [{ name: "FoodReviewLab" }],
-  creator: "FoodReviewLab",
-  publisher: "FoodReviewLab",
+  keywords: ["맛집 정보", "지역별 맛집", "맛집 가격", "여행 맛집", "나들이 맛집"],
+  authors: [{ name: "테이스트 가이드" }],
+  creator: "테이스트 가이드",
+  publisher: "테이스트 가이드",
   openGraph: {
-    title: "맛집리뷰Lab",
-    description: "전국 맛집 리뷰 및 음식점 정보를 제공하는 사이트 및 투자 가이드를 제공하는 사이트입니다.",
+    title: "테이스트 가이드",
+    description: "한국의 지역별 맛집정보, 가격정보 등을 전달해드리는 곳입니다. 여행갈때, 나들이갈때 맛집정보를 테이스트 가이드에서 확인하세요.",
     type: "website",
     locale: "ko_KR",
     url: "https://foodreviewlab.xyz",
-    siteName: "맛집리뷰Lab",
+    siteName: "테이스트 가이드",
   },
   twitter: {
     card: "summary_large_image",
-    title: "맛집리뷰Lab",
-    description: "전국 맛집 리뷰 및 음식점 정보를 제공하는 사이트 및 투자 가이드를 제공하는 사이트입니다.",
+    title: "테이스트 가이드",
+    description: "한국의 지역별 맛집정보, 가격정보 등을 전달해드리는 곳입니다. 여행갈때, 나들이갈때 맛집정보를 테이스트 가이드에서 확인하세요.",
   },
   robots: {
     index: true,
@@ -49,10 +49,10 @@ export default function RootLayout({
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "맛집리뷰Lab",
-    "alternateName": "FoodReviewLab",
+    "name": "테이스트 가이드",
+    "alternateName": "Taste Guide",
     "url": "https://foodreviewlab.xyz",
-    "description": "전국 맛집 리뷰 및 음식점 정보를 제공하는 사이트 및 투자 가이드를 제공하는 사이트입니다.",
+    "description": "한국의 지역별 맛집정보, 가격정보 등을 전달해드리는 곳입니다. 여행갈때, 나들이갈때 맛집정보를 테이스트 가이드에서 확인하세요.",
   };
 
   return (
