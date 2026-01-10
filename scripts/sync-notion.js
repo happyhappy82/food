@@ -49,14 +49,14 @@ function downloadImage(url, filepath) {
 
 async function getPageProperties(pageId) {
   const page = await notion.pages.retrieve({ page_id: pageId });
-  const restaurants = page.restaurants;
+  const properties = page.properties;
 
-  console.log('   Available restaurants:', Object.keys(restaurants).join(', '));
+  console.log('   Available properties:', Object.keys(properties).join(', '));
 
   let status = '';
-  for (const key of Object.keys(restaurants)) {
+  for (const key of Object.keys(properties)) {
     if (key.toLowerCase().includes('status')) {
-      status = restaurants[key]?.status?.name || restaurants[key]?.select?.name || '';
+      status = properties[key]?.status?.name || properties[key]?.select?.name || '';
       if (status) {
         console.log(`   Found status in property '${key}': ${status}`);
         break;
@@ -71,11 +71,11 @@ async function getPageProperties(pageId) {
 
   return {
     pageId: page.id,
-    title: getFullText(restaurants.Title?.title) || '',
-    date: restaurants.Date?.date?.start || new Date().toISOString().split('T')[0],
-    excerpt: getFullText(restaurants.Excerpt?.rich_text) || '',
-    lightColor: getFullText(restaurants.LightColor?.rich_text) || 'lab(62.926 59.277 -1.573)',
-    darkColor: getFullText(restaurants.DarkColor?.rich_text) || 'lab(80.993 32.329 -7.093)',
+    title: getFullText(properties.Title?.title) || '',
+    date: properties.Date?.date?.start || new Date().toISOString().split('T')[0],
+    excerpt: getFullText(properties.Excerpt?.rich_text) || '',
+    lightColor: getFullText(properties.LightColor?.rich_text) || 'lab(62.926 59.277 -1.573)',
+    darkColor: getFullText(properties.DarkColor?.rich_text) || 'lab(80.993 32.329 -7.093)',
     status: status,
   };
 }
