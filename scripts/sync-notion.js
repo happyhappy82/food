@@ -152,10 +152,23 @@ async function processPage(pageId, isNew = false) {
     }
   }
 
+  // excerpt가 비어있으면 본문에서 추출
+  let excerpt = props.excerpt;
+  if (!excerpt) {
+    const plainText = markdown
+      .replace(/^#+\s+.*/gm, '') // 헤더 제거
+      .replace(/!\[.*?\]\(.*?\)/g, '') // 이미지 제거
+      .replace(/\[.*?\]\(.*?\)/g, '') // 링크 제거
+      .replace(/[*_~`]/g, '') // 강조 문법 제거
+      .replace(/\n+/g, ' ') // 줄바꿈을 공백으로
+      .trim();
+    excerpt = plainText.length > 150 ? plainText.substring(0, 150).trim() + '...' : plainText;
+  }
+
   const frontmatter = `---
 title: "${props.title}"
 date: "${props.date}"
-excerpt: "${props.excerpt}"
+excerpt: "${excerpt}"
 lightColor: "${props.lightColor}"
 darkColor: "${props.darkColor}"
 notionPageId: "${props.pageId}"

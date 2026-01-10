@@ -17,6 +17,23 @@ export interface Restaurant {
   notionPageId?: string;
 }
 
+function extractExcerpt(content: string, maxLength: number = 150): string {
+  // 마크다운 문법 제거
+  const plainText = content
+    .replace(/^#+\s+.*/gm, '') // 헤더 제거
+    .replace(/!\[.*?\]\(.*?\)/g, '') // 이미지 제거
+    .replace(/\[.*?\]\(.*?\)/g, '') // 링크 제거
+    .replace(/[*_~`]/g, '') // 강조 문법 제거
+    .replace(/\n+/g, ' ') // 줄바꿈을 공백으로
+    .trim();
+
+  if (plainText.length <= maxLength) {
+    return plainText;
+  }
+
+  return plainText.substring(0, maxLength).trim() + '...';
+}
+
 export function getSortedPropertiesData(): Restaurant[] {
   if (!fs.existsSync(restaurantsDirectory)) {
     return [];
@@ -31,11 +48,13 @@ export function getSortedPropertiesData(): Restaurant[] {
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data, content } = matter(fileContents);
 
+      const excerpt = data.excerpt || extractExcerpt(content);
+
       return {
         slug,
         title: data.title || '',
         date: data.date || '',
-        excerpt: data.excerpt || '',
+        excerpt,
         content,
         lightColor: data.lightColor || 'lab(62.926 59.277 -1.573)',
         darkColor: data.darkColor || 'lab(80.993 32.329 -7.093)',
@@ -54,7 +73,8 @@ export function getSortedPropertiesData(): Restaurant[] {
 }
 
 export function getRestaurantBySlug(slug: string): Restaurant | null {
-  const fullPath = path.join(restaurantsDirectory, `${slug}.md`);
+  const decodedSlug = decodeURIComponent(slug);
+  const fullPath = path.join(restaurantsDirectory, `${decodedSlug}.md`);
 
   if (!fs.existsSync(fullPath)) {
     return null;
@@ -63,11 +83,13 @@ export function getRestaurantBySlug(slug: string): Restaurant | null {
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(fileContents);
 
+  const excerpt = data.excerpt || extractExcerpt(content);
+
   return {
-    slug,
+    slug: decodedSlug,
     title: data.title || '',
     date: data.date || '',
-    excerpt: data.excerpt || '',
+    excerpt,
     content,
     lightColor: data.lightColor || 'lab(62.926 59.277 -1.573)',
     darkColor: data.darkColor || 'lab(80.993 32.329 -7.093)',
