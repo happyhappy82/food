@@ -12,6 +12,8 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const restaurants = getSortedPropertiesData();
   return restaurants.map((property) => ({
