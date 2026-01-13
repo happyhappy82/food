@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
+const SITE_URL = "https://www.tasteguide.xyz";
+const SITE_NAME = "테이스트 가이드";
+const SITE_DESCRIPTION = "한국의 지역별 맛집정보, 가격정보 등을 전달해드리는 곳입니다. 여행갈때, 나들이갈때 맛집정보를 테이스트 가이드에서 확인하세요.";
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -11,25 +15,40 @@ export const metadata: Metadata = {
   verification: {
     google: "sUqWsAvcwgNpd8rOL89tdHIAhTykv68Sc9gXXRuMnSE",
   },
-  title: "테이스트 가이드",
-  description: "한국의 지역별 맛집정보, 가격정보 등을 전달해드리는 곳입니다. 여행갈때, 나들이갈때 맛집정보를 테이스트 가이드에서 확인하세요.",
-  metadataBase: new URL("https://foodreviewlab.xyz"),
-  keywords: ["맛집 정보", "지역별 맛집", "맛집 가격", "여행 맛집", "나들이 맛집"],
-  authors: [{ name: "테이스트 가이드" }],
-  creator: "테이스트 가이드",
-  publisher: "테이스트 가이드",
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  metadataBase: new URL(SITE_URL),
+  keywords: ["맛집 정보", "지역별 맛집", "맛집 가격", "여행 맛집", "나들이 맛집", "맛집 추천", "맛집 리뷰"],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  alternates: {
+    canonical: SITE_URL,
+  },
   openGraph: {
-    title: "테이스트 가이드",
-    description: "한국의 지역별 맛집정보, 가격정보 등을 전달해드리는 곳입니다. 여행갈때, 나들이갈때 맛집정보를 테이스트 가이드에서 확인하세요.",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
     type: "website",
     locale: "ko_KR",
-    url: "https://foodreviewlab.xyz",
-    siteName: "테이스트 가이드",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: `${SITE_URL}/opengraph-image.png`,
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} - 한국 맛집 정보`,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "테이스트 가이드",
-    description: "한국의 지역별 맛집정보, 가격정보 등을 전달해드리는 곳입니다. 여행갈때, 나들이갈때 맛집정보를 테이스트 가이드에서 확인하세요.",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: [`${SITE_URL}/twitter-image.png`],
   },
   robots: {
     index: true,
@@ -52,10 +71,30 @@ export default function RootLayout({
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "테이스트 가이드",
-    "alternateName": "Taste Guide",
-    "url": "https://foodreviewlab.xyz",
-    "description": "한국의 지역별 맛집정보, 가격정보 등을 전달해드리는 곳입니다. 여행갈때, 나들이갈때 맛집정보를 테이스트 가이드에서 확인하세요.",
+    "@id": `${SITE_URL}/#website`,
+    name: SITE_NAME,
+    alternateName: "Taste Guide",
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    publisher: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    inLanguage: "ko-KR",
+  };
+
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: {
+      "@type": "ImageObject",
+      url: `${SITE_URL}/logo.png`,
+      width: 180,
+      height: 40,
+    },
+    description: SITE_DESCRIPTION,
   };
 
   return (
@@ -86,6 +125,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
       </head>
       <body className="mx-auto max-w-2xl bg-white px-5 py-12 text-black">

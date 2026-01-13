@@ -9,9 +9,10 @@ export default function Home() {
     <>
       <Header />
       <main>
+        <h1 className="sr-only">테이스트 가이드 - 한국 지역별 맛집 정보</h1>
         <div className="relative -top-[10px] flex flex-col gap-8">
           {restaurants.length === 0 ? (
-            <p>No restaurants yet. Create your first property in content/restaurants/</p>
+            <p className="text-gray-600">아직 등록된 맛집이 없습니다.</p>
           ) : (
             restaurants.map((property) => (
               <RestaurantCard key={property.slug} {...property} />
