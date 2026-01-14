@@ -14,6 +14,9 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   verification: {
     google: "sUqWsAvcwgNpd8rOL89tdHIAhTykv68Sc9gXXRuMnSE",
+    other: {
+      "naver-site-verification": ["f195db2afb063f002b33fcdac086cd356b5db778"],
+    },
   },
   title: {
     default: SITE_NAME,
