@@ -9,7 +9,7 @@ export default defineConfig({
     sitemap(),
   ],
   build: {
-    inlineStylesheets: 'auto',
+    inlineStylesheets: 'always',
   },
   vite: {
     build: {
