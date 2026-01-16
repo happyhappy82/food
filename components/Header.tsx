@@ -3,11 +3,11 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="mb-14 flex flex-row place-content-between h-10" role="banner">
-      <nav className="flex items-center gap-3" aria-label="메인 네비게이션">
+    <header className="mb-14 flex flex-row place-content-between" role="banner">
+      <nav className="flex items-center gap-3 h-10" aria-label="메인 네비게이션">
         <Link
           href="/"
-          className="inline-block w-[180px] h-[40px]"
+          className="inline-flex items-center"
           aria-label="테이스트 가이드 홈으로 이동"
         >
           <Image
@@ -16,8 +16,7 @@ export default function Header() {
             width={180}
             height={40}
             priority
-            className="w-[180px] h-[40px]"
-            style={{ width: '180px', height: '40px' }}
+            style={{ width: 'auto', height: '40px' }}
           />
         </Link>
       </nav>
