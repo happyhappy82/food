@@ -9,6 +9,11 @@ interface RestaurantCardProps {
   darkColor: string;
 }
 
+function formatDisplayDate(isoDate: string): string {
+  const date = new Date(isoDate);
+  return date.toISOString().split('T')[0];
+}
+
 export default function RestaurantCard({
   title,
   date,
@@ -27,7 +32,7 @@ export default function RestaurantCard({
         >
           {title}
         </h2>
-        <p className="text-[13px] text-gray-700">{date}</p>
+        <time dateTime={date} className="text-[13px] text-gray-700">{formatDisplayDate(date)}</time>
         <p className="mt-1">{excerpt}</p>
       </article>
     </Link>

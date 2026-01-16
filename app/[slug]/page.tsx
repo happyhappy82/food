@@ -11,6 +11,11 @@ import type { Metadata } from "next";
 const SITE_URL = "https://www.tasteguide.xyz";
 const SITE_NAME = "테이스트 가이드";
 
+function formatDisplayDate(isoDate: string): string {
+  const date = new Date(isoDate);
+  return date.toISOString().split('T')[0];
+}
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
@@ -167,7 +172,7 @@ export default async function RestaurantPage({ params }: Props) {
           />
         )}
 
-        <div className="mb-8">
+        <header className="mb-8">
           <h1
             className="text-[42px] font-black leading-tight mb-4"
             style={{ color: property.lightColor }}
@@ -175,10 +180,10 @@ export default async function RestaurantPage({ params }: Props) {
             {property.title}
           </h1>
           <div className="flex gap-4 text-sm text-gray-600">
-            <time dateTime={property.date}>{property.date}</time>
-            <span>{property.readingTime}</span>
+            <time dateTime={property.date}>{formatDisplayDate(property.date)}</time>
+            <span aria-label="예상 읽기 시간">{property.readingTime}</span>
           </div>
-        </div>
+        </header>
 
         <div className="prose prose-lg max-w-none">
           <ReactMarkdown

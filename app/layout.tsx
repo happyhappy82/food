@@ -9,6 +9,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  themeColor: "#ffffff",
 };
 
 export const metadata: Metadata = {
@@ -103,28 +104,56 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* Google Analytics (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EY70J0X7MT" />
+        {/* Preconnect & DNS Prefetch for external resources */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+
+        {/* RSS Feed */}
+        <link rel="alternate" type="application/rss+xml" title={`${SITE_NAME} RSS Feed`} href={`${SITE_URL}/rss.xml`} />
+
+        {/* GA/GTM Deferred Load - loads after window.onload for better performance */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-EY70J0X7MT');`,
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+
+              function loadGA() {
+                var script = document.createElement('script');
+                script.src = 'https://www.googletagmanager.com/gtag/js?id=G-EY70J0X7MT';
+                script.async = true;
+                document.head.appendChild(script);
+                gtag('js', new Date());
+                gtag('config', 'G-EY70J0X7MT');
+              }
+
+              function loadGTM() {
+                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','GTM-P8CB3VNV');
+              }
+
+              if (window.requestIdleCallback) {
+                requestIdleCallback(function() {
+                  loadGA();
+                  loadGTM();
+                });
+              } else {
+                window.addEventListener('load', function() {
+                  setTimeout(function() {
+                    loadGA();
+                    loadGTM();
+                  }, 0);
+                });
+              }
+            `,
           }}
         />
-        {/* End Google Analytics */}
-        {/* Google Tag Manager */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-P8CB3VNV');`,
-          }}
-        />
-        {/* End Google Tag Manager */}
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
@@ -135,6 +164,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         />
       </head>
       <body className="mx-auto max-w-2xl bg-white px-5 py-12 text-black">
+        {/* Skip to content link for accessibility */}
+        <a href="#main-content" className="skip-link">
+          본문으로 바로가기
+        </a>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
@@ -142,10 +175,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
+            title="Google Tag Manager"
           />
         </noscript>
         {/* End Google Tag Manager (noscript) */}
-        {children}
+        <div id="main-content">
+          {children}
+        </div>
       </body>
     </html>
   );
