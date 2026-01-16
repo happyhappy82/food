@@ -159,34 +159,34 @@ export default async function RestaurantPage({ params }: Props) {
   return (
     <>
       <Header />
-      <article className="relative">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-        />
-        {faqSchema && (
+      <main role="main">
+        <article className="relative">
           <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
           />
-        )}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+          />
+          {faqSchema && (
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+            />
+          )}
 
-        <header className="mb-8">
-          <h1
-            className="text-[42px] font-black leading-tight mb-4"
-            style={{ color: property.lightColor }}
-          >
-            {property.title}
-          </h1>
-          <div className="flex gap-4 text-sm text-gray-600">
-            <time dateTime={property.date}>{formatDisplayDate(property.date)}</time>
-            <span aria-label="예상 읽기 시간">{property.readingTime}</span>
-          </div>
-        </header>
+          <header className="mb-8">
+            <h1
+              className="text-[42px] font-black leading-tight mb-4 text-gray-900"
+            >
+              {property.title}
+            </h1>
+            <div className="flex gap-4 text-sm text-gray-700">
+              <time dateTime={property.date}>{formatDisplayDate(property.date)}</time>
+              <span aria-label="예상 읽기 시간">{property.readingTime}</span>
+            </div>
+          </header>
 
         <div className="prose prose-lg max-w-none">
           <ReactMarkdown
@@ -208,9 +208,10 @@ export default async function RestaurantPage({ params }: Props) {
           </ReactMarkdown>
         </div>
 
-        <QnA items={qnaItems} />
-        <TableOfContents />
-      </article>
+          <QnA items={qnaItems} />
+          <TableOfContents />
+        </article>
+      </main>
     </>
   );
 }

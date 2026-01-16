@@ -35,7 +35,7 @@ export default function RestaurantCard({
         >
           {title}
         </h2>
-        <time dateTime={date} className="text-[13px] text-gray-700">{formatDisplayDate(date)}</time>
+        <time dateTime={date} className="block text-[13px] text-gray-700">{formatDisplayDate(date)}</time>
         <p className="mt-1">{excerpt}</p>
       </article>
     </Link>

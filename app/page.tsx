@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main>
+      <main role="main">
         <h1 className="sr-only">테이스트 가이드 - 한국 지역별 맛집 정보</h1>
         <div className="flex flex-col gap-8 -mt-[10px]">
           {restaurants.length === 0 ? (
