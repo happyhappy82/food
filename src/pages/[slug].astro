@@ -28,12 +28,13 @@ const articleUrl = `${SITE_URL}/${slug}`;
 const qnaItems = extractQnA(restaurant.content);
 const contentWithoutQnA = removeQnASection(restaurant.content);
 
-// Configure marked to add IDs to headings
+// Configure marked to add IDs to headings (marked v15+ API)
 marked.use({
   renderer: {
-    heading(text, level) {
-      const id = String(text).toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-가-힣]/g, '');
-      return `<h${level} id="${id}">${text}</h${level}>`;
+    heading({ text, depth }) {
+      const headingText = typeof text === 'string' ? text : '';
+      const id = headingText.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-가-힣]/g, '');
+      return `<h${depth} id="${id}">${headingText}</h${depth}>`;
     }
   }
 });
