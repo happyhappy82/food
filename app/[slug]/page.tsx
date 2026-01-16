@@ -12,8 +12,11 @@ const SITE_URL = "https://www.tasteguide.xyz";
 const SITE_NAME = "테이스트 가이드";
 
 function formatDisplayDate(isoDate: string): string {
-  const date = new Date(isoDate);
-  return date.toISOString().split('T')[0];
+  // ISO 날짜 문자열에서 직접 YYYY-MM-DD 추출 (timezone 변환 방지)
+  if (isoDate.includes('T')) {
+    return isoDate.split('T')[0];
+  }
+  return isoDate.slice(0, 10);
 }
 
 interface Props {
