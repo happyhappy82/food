@@ -1,9 +1,9 @@
 # Dependencies
 node_modules/
 
-# Next.js
-.next/
-out/
+# Astro
+dist/
+.astro/
 
 # Production
 build/
@@ -23,4 +23,3 @@ npm-debug.log*
 
 # TypeScript
 *.tsbuildinfo
-next-env.d.ts

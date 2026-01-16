@@ -1,0 +1,38 @@
+---
+import type { QnAItem } from '@/utils/qna-utils';
+import { marked } from 'marked';
+
+interface Props {
+  items: QnAItem[];
+}
+
+const { items } = Astro.props;
+
+if (items.length === 0) {
+  return null;
+}
+---
+
+{items.length > 0 && (
+  <section class="mt-12 border-t pt-8" aria-labelledby="qna-title">
+    <h2 id="qna-title" class="text-2xl font-bold mb-6">자주 묻는 질문</h2>
+    <div class="space-y-4">
+      {items.map((item, index) => (
+        <details class="group border rounded-lg">
+          <summary class="cursor-pointer p-4 font-medium list-none flex justify-between items-center hover:bg-gray-50">
+            <span>{item.question}</span>
+            <svg
+              class="w-5 h-5 transition-transform group-open:rotate-180"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <div class="px-4 pb-4 prose prose-sm max-w-none" set:html={marked.parse(item.answer)} />
+        </details>
+      ))}
+    </div>
+  </section>
+)}

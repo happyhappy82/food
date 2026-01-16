@@ -1,0 +1,59 @@
+---
+// TableOfContents - Client-side component
+---
+
+<aside id="toc-sidebar" class="hidden xl:block fixed right-8 top-1/2 -translate-y-1/2 w-64" aria-label="목차">
+  <nav class="text-sm">
+    <h3 class="font-bold mb-3 text-gray-900">목차</h3>
+    <ul id="toc-list" class="space-y-2 text-gray-600">
+      <!-- Populated by JavaScript -->
+    </ul>
+  </nav>
+</aside>
+
+<script>
+  function initTOC() {
+    const tocList = document.getElementById('toc-list');
+    const tocSidebar = document.getElementById('toc-sidebar');
+    if (!tocList || !tocSidebar) return;
+
+    const headings = document.querySelectorAll('.prose h2, .prose h3');
+    if (headings.length === 0) {
+      tocSidebar.style.display = 'none';
+      return;
+    }
+
+    headings.forEach((heading) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `#${heading.id}`;
+      a.textContent = heading.textContent;
+      a.className = heading.tagName === 'H3'
+        ? 'pl-4 hover:text-gray-900 block'
+        : 'hover:text-gray-900 block font-medium';
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    // Highlight active section
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const id = entry.target.getAttribute('id');
+          const link = tocList.querySelector(`a[href="#${id}"]`);
+          if (link) {
+            if (entry.isIntersecting) {
+              tocList.querySelectorAll('a').forEach((a) => a.classList.remove('text-blue-600'));
+              link.classList.add('text-blue-600');
+            }
+          }
+        });
+      },
+      { rootMargin: '-20% 0px -80% 0px' }
+    );
+
+    headings.forEach((heading) => observer.observe(heading));
+  }
+
+  document.addEventListener('DOMContentLoaded', initTOC);
+</script>

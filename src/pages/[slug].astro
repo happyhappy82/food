@@ -1,0 +1,142 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import QnA from '@/components/QnA.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
+import { getSortedRestaurants, getRestaurantBySlug, formatDisplayDate } from '@/utils/restaurants';
+import { extractQnA, removeQnASection } from '@/utils/qna-utils';
+import { marked } from 'marked';
+
+export function getStaticPaths() {
+  const restaurants = getSortedRestaurants();
+  return restaurants.map((restaurant) => ({
+    params: { slug: restaurant.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const restaurant = getRestaurantBySlug(slug as string);
+
+if (!restaurant) {
+  return Astro.redirect('/404');
+}
+
+const SITE_URL = 'https://www.tasteguide.xyz';
+const SITE_NAME = '테이스트 가이드';
+const articleUrl = `${SITE_URL}/${slug}`;
+
+const qnaItems = extractQnA(restaurant.content);
+const contentWithoutQnA = removeQnASection(restaurant.content);
+
+// Configure marked to add IDs to headings
+marked.use({
+  renderer: {
+    heading(text, level) {
+      const id = String(text).toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-가-힣]/g, '');
+      return `<h${level} id="${id}">${text}</h${level}>`;
+    }
+  }
+});
+
+const htmlContent = marked.parse(contentWithoutQnA);
+
+// Schema.org
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "@id": `${articleUrl}/#article`,
+  headline: restaurant.title,
+  description: restaurant.excerpt,
+  image: `${SITE_URL}/opengraph-image.png`,
+  author: {
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: SITE_NAME,
+    url: SITE_URL,
+  },
+  publisher: {
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: {
+      "@type": "ImageObject",
+      url: `${SITE_URL}/logo.png`,
+      width: 180,
+      height: 40,
+    },
+  },
+  datePublished: restaurant.date,
+  dateModified: restaurant.date,
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": articleUrl,
+  },
+  inLanguage: "ko-KR",
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "홈",
+      item: SITE_URL,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: restaurant.title,
+      item: articleUrl,
+    },
+  ],
+};
+
+const faqSchema = qnaItems.length > 0 ? {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: qnaItems.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.answer,
+    },
+  })),
+} : null;
+---
+
+<Layout
+  title={restaurant.title}
+  description={restaurant.excerpt}
+  canonical={articleUrl}
+  article={{ publishedTime: restaurant.date, modifiedTime: restaurant.date }}
+>
+  <Header />
+  <main role="main">
+    <article class="relative">
+      <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+      <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+      {faqSchema && (
+        <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+      )}
+
+      <header class="mb-8">
+        <h1 class="text-[42px] font-black leading-tight mb-4 text-gray-900">
+          {restaurant.title}
+        </h1>
+        <div class="flex gap-4 text-sm text-gray-700">
+          <time datetime={restaurant.date}>{formatDisplayDate(restaurant.date)}</time>
+          <span aria-label="예상 읽기 시간">{restaurant.readingTime}</span>
+        </div>
+      </header>
+
+      <div class="prose prose-lg max-w-none" set:html={htmlContent} />
+
+      <QnA items={qnaItems} />
+      <TableOfContents />
+    </article>
+  </main>
+</Layout>

@@ -11,20 +11,17 @@ export interface Restaurant {
   date: string;
   excerpt: string;
   content: string;
-  lightColor: string;
-  darkColor: string;
   readingTime: string;
   notionPageId?: string;
 }
 
 function extractExcerpt(content: string, maxLength: number = 150): string {
-  // 마크다운 문법 제거
   const plainText = content
-    .replace(/^#+\s+.*/gm, '') // 헤더 제거
-    .replace(/!\[.*?\]\(.*?\)/g, '') // 이미지 제거
-    .replace(/\[.*?\]\(.*?\)/g, '') // 링크 제거
-    .replace(/[*_~`]/g, '') // 강조 문법 제거
-    .replace(/\n+/g, ' ') // 줄바꿈을 공백으로
+    .replace(/^#+\s+.*/gm, '')
+    .replace(/!\[.*?\]\(.*?\)/g, '')
+    .replace(/\[.*?\]\(.*?\)/g, '')
+    .replace(/[*_~`]/g, '')
+    .replace(/\n+/g, ' ')
     .trim();
 
   if (plainText.length <= maxLength) {
@@ -34,13 +31,13 @@ function extractExcerpt(content: string, maxLength: number = 150): string {
   return plainText.substring(0, maxLength).trim() + '...';
 }
 
-export function getSortedPropertiesData(): Restaurant[] {
+export function getSortedRestaurants(): Restaurant[] {
   if (!fs.existsSync(restaurantsDirectory)) {
     return [];
   }
 
   const fileNames = fs.readdirSync(restaurantsDirectory);
-  const allPropertiesData = fileNames
+  const allData = fileNames
     .filter((fileName) => fileName.endsWith('.md'))
     .map((fileName) => {
       const slug = fileName.replace(/\.md$/, '');
@@ -56,20 +53,12 @@ export function getSortedPropertiesData(): Restaurant[] {
         date: data.date || '',
         excerpt,
         content,
-        lightColor: data.lightColor || 'lab(62.926 59.277 -1.573)',
-        darkColor: data.darkColor || 'lab(80.993 32.329 -7.093)',
         readingTime: readingTime(content).text,
         notionPageId: data.notionPageId,
       };
     });
 
-  return allPropertiesData.sort((a, b) => {
-    if (a.date < b.date) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
+  return allData.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
 export function getRestaurantBySlug(slug: string): Restaurant | null {
@@ -91,9 +80,14 @@ export function getRestaurantBySlug(slug: string): Restaurant | null {
     date: data.date || '',
     excerpt,
     content,
-    lightColor: data.lightColor || 'lab(62.926 59.277 -1.573)',
-    darkColor: data.darkColor || 'lab(80.993 32.329 -7.093)',
     readingTime: readingTime(content).text,
     notionPageId: data.notionPageId,
   };
+}
+
+export function formatDisplayDate(isoDate: string): string {
+  if (isoDate.includes('T')) {
+    return isoDate.split('T')[0];
+  }
+  return isoDate.slice(0, 10);
 }

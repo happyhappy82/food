@@ -1,0 +1,232 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  article?: {
+    publishedTime: string;
+    modifiedTime: string;
+  };
+}
+
+const SITE_URL = 'https://www.tasteguide.xyz';
+const SITE_NAME = '테이스트 가이드';
+const DEFAULT_DESCRIPTION = '한국의 지역별 맛집정보, 가격정보 등을 전달해드리는 곳입니다. 여행갈때, 나들이갈때 맛집정보를 테이스트 가이드에서 확인하세요.';
+
+const {
+  title,
+  description = DEFAULT_DESCRIPTION,
+  canonical = SITE_URL,
+  ogImage = `${SITE_URL}/opengraph-image.png`,
+  article
+} = Astro.props;
+
+const fullTitle = title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE_URL}/#website`,
+  name: SITE_NAME,
+  alternateName: "Taste Guide",
+  url: SITE_URL,
+  description: DEFAULT_DESCRIPTION,
+  publisher: {
+    "@id": `${SITE_URL}/#organization`,
+  },
+  inLanguage: "ko-KR",
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${SITE_URL}/#organization`,
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: {
+    "@type": "ImageObject",
+    url: `${SITE_URL}/logo.png`,
+    width: 180,
+    height: 40,
+  },
+  description: DEFAULT_DESCRIPTION,
+};
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- Preconnect & DNS Prefetch -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://www.google-analytics.com" />
+    <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="apple-touch-icon" href="/apple-icon.png" />
+
+    <!-- SEO -->
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="맛집 정보, 지역별 맛집, 맛집 가격, 여행 맛집, 나들이 맛집, 맛집 추천, 맛집 리뷰" />
+    <meta name="author" content={SITE_NAME} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Verification -->
+    <meta name="google-site-verification" content="sUqWsAvcwgNpd8rOL89tdHIAhTykv68Sc9gXXRuMnSE" />
+    <meta name="naver-site-verification" content="f195db2afb063f002b33fcdac086cd356b5db778" />
+
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title={`${SITE_NAME} RSS Feed`} href={`${SITE_URL}/rss.xml`} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={article ? "article" : "website"} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {article && (
+      <>
+        <meta property="article:published_time" content={article.publishedTime} />
+        <meta property="article:modified_time" content={article.modifiedTime} />
+        <meta property="article:author" content={SITE_NAME} />
+      </>
+    )}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${SITE_URL}/twitter-image.png`} />
+
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+    <!-- Schema.org -->
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+
+    <!-- GA/GTM Deferred Load -->
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+
+      function loadGA() {
+        var script = document.createElement('script');
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-EY70J0X7MT';
+        script.async = true;
+        document.head.appendChild(script);
+        gtag('js', new Date());
+        gtag('config', 'G-EY70J0X7MT');
+      }
+
+      function loadGTM() {
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-P8CB3VNV');
+      }
+
+      if (window.requestIdleCallback) {
+        requestIdleCallback(function() {
+          loadGA();
+          loadGTM();
+        });
+      } else {
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            loadGA();
+            loadGTM();
+          }, 0);
+        });
+      }
+    </script>
+  </head>
+  <body class="mx-auto max-w-2xl bg-white px-5 py-12 text-black">
+    <!-- Skip to content -->
+    <a href="#main-content" class="skip-link">본문으로 바로가기</a>
+
+    <!-- GTM noscript -->
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-P8CB3VNV"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+        title="Google Tag Manager"
+      ></iframe>
+    </noscript>
+
+    <div id="main-content">
+      <slot />
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  @media (max-width: 640px) {
+    body {
+      font-size: 16px;
+    }
+    a, button {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  .prose table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .prose th:first-child,
+  .prose td:first-child {
+    white-space: nowrap;
+  }
+
+  :focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #000;
+    color: #fff;
+    padding: 8px 16px;
+    z-index: 100;
+    transition: top 0.3s;
+  }
+
+  .skip-link:focus {
+    top: 0;
+  }
+</style>

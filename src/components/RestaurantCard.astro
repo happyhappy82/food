@@ -1,0 +1,24 @@
+---
+import { formatDisplayDate } from '@/utils/restaurants';
+
+interface Props {
+  title: string;
+  date: string;
+  excerpt: string;
+  slug: string;
+}
+
+const { title, date, excerpt, slug } = Astro.props;
+---
+
+<a class="block py-4" href={`/${slug}`}>
+  <article>
+    <h2 class="text-[28px] font-black leading-none mb-2 text-gray-900">
+      {title}
+    </h2>
+    <time datetime={date} class="block text-[13px] text-gray-700">
+      {formatDisplayDate(date)}
+    </time>
+    <p class="mt-1">{excerpt}</p>
+  </article>
+</a>
