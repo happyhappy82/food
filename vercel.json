@@ -3,7 +3,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/sitemap-index.xml" }
+    { "source": "/sitemap.xml", "destination": "/sitemap-0.xml" }
   ],
   "headers": [
     {
