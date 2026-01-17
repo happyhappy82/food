@@ -11,7 +11,8 @@ async function submitToGoogle() {
       return;
     }
 
-    const fullUrl = `${siteUrl}/${publishedSlug}`;
+    const encodedSlug = encodeURIComponent(publishedSlug);
+    const fullUrl = `${siteUrl}/${encodedSlug}/`;
     console.log(`🔍 Submitting URL to Google: ${fullUrl}`);
 
     const credentials = JSON.parse(serviceAccountJson);
