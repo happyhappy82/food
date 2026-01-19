@@ -165,12 +165,18 @@ async function processPage(pageId, isNew = false) {
     excerpt = plainText.length > 150 ? plainText.substring(0, 150).trim() + '...' : plainText;
   }
 
+  // YAML frontmatter에서 특수문자 이스케이프
+  const escapeYaml = (str) => {
+    if (!str) return '';
+    return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  };
+
   const frontmatter = `---
-title: "${props.title}"
+title: "${escapeYaml(props.title)}"
 date: "${props.date}"
-excerpt: "${excerpt}"
-lightColor: "${props.lightColor}"
-darkColor: "${props.darkColor}"
+excerpt: "${escapeYaml(excerpt)}"
+lightColor: "${escapeYaml(props.lightColor)}"
+darkColor: "${escapeYaml(props.darkColor)}"
 notionPageId: "${props.pageId}"
 ---
 
